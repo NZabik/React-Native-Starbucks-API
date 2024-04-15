@@ -9,7 +9,7 @@ import Contact from "./Contact";
 import Contact2 from "./Contact2";
 import Contact3 from "./Contact3";
 import Divers from "./Divers";
-import Divers2 from "./Divers2";
+import Login from "./Login";
 import Divers3 from "./Divers3";
 
 const Tab = createBottomTabNavigator();
@@ -54,8 +54,8 @@ function DiversScreen() {
                     let iconName;
                     if (route.name === 'Modale') {
                         iconName = focused ? 'list' : 'list-outline';
-                    } else if (route.name === 'Divers2') {
-                        iconName = focused ? 'list' : 'list-outline';
+                    } else if (route.name === 'Login') {
+                        iconName = 'person-outline';
                     } else if (route.name === 'Divers3') {
                         iconName = focused ? 'list' : 'list-outline';
                     }
@@ -68,7 +68,7 @@ function DiversScreen() {
             })}
         >
             <Tab.Screen name="Modale" component={Divers} />
-            <Tab.Screen name="Divers2" component={Divers2} />
+            <Tab.Screen name="Login" component={Login} />
             <Tab.Screen name="Divers3" component={Divers3} />
         </Tab.Navigator>
     );
