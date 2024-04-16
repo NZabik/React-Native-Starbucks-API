@@ -1,34 +1,53 @@
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Platform, StatusBar } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Products from './Products';
 
-function Menu() {
+function MenuModale() {
     const [isDisplayed, setIsDisplayed] = useState(false);
-    const [modal, setModal] = useState(false);
     const navigation = useNavigation();
-    // ferme automatiquement la liste quand on change de page
+    const isFocused = useIsFocused();
+    const [token, setToken] = useState(null);
+
+    async function getToken() {
+        const storedToken = await AsyncStorage.getItem('userToken');
+        setToken(storedToken);
+    }
+
+    useEffect(() => {
+        getToken();
+    }, [isFocused]);
+
     useEffect(() => {
         const unsubscribe = navigation.addListener('blur', () => {
             setIsDisplayed(false);
         });
 
-        return unsubscribe;
+        return () => {
+            unsubscribe();
+        };
     }, [navigation]);
 
     return (
-        // SafeAreaView permet de gérer les problèmes de padding sur les appareils android
         <SafeAreaView style={styles.container}>
             <View style={{ marginTop: 20, marginBottom: 40 }}>
                 {isDisplayed && (<Products />)}
-                <TouchableOpacity
-                    onPress={() => setIsDisplayed(prevState => !prevState)}
-                    style={{ width: 'auto', backgroundColor: '#A7000C', paddingHorizontal: 15, paddingVertical: 10, borderRadius: 3 }}
-                    activeOpacity={0.5}
-                >
+                {token ? (
+                    <TouchableOpacity
+                        onPress={() => setIsDisplayed(prevState => !prevState)}
+                        style={{ width: 'auto', backgroundColor: '#A7000C', paddingHorizontal: 15, paddingVertical: 10, borderRadius: 3 }}
+                        activeOpacity={0.5}
+                    >
+                        <Text style={{ color: '#fff', textAlign: 'center' }}>
+                            {isDisplayed ? 'Fermer' : 'Menu'}
+                        </Text>
+                    </TouchableOpacity>
+                ) : (
                     <Text style={{ color: '#fff', textAlign: 'center' }}>
-                        {isDisplayed ? 'Fermer' : 'Menu'}</Text>
-                </TouchableOpacity>
+                        Veuillez vous connecter
+                    </Text>
+                )}
             </View>
         </SafeAreaView>
     );
@@ -50,4 +69,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Menu;
+export default MenuModale;

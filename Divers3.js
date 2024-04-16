@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 function Divers3() {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Divers3</Text>
+            <Text style={styles.text}>Divers</Text>
         </View>
     );
 }

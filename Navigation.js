@@ -3,12 +3,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Accueil from "./Accueil";
-import Menu from "./MenuModale";
+import MenuModale from "./MenuModale";
 import Menu2 from "./Menu";
 import Contact from "./Contact";
 import Contact2 from "./Contact2";
 import Contact3 from "./Contact3";
-import Divers from "./Divers";
+import Compte from "./Compte";
 import Login from "./Login";
 import Divers3 from "./Divers3";
 
@@ -38,7 +38,7 @@ function AccueilScreen() {
             })}
         >
             <Tab.Screen name="Présentation" component={Accueil} />
-            <Tab.Screen name="Menu Modale" component={Menu} />
+            <Tab.Screen name="Menu Modale" component={MenuModale} />
             <Tab.Screen name="Menu" component={Menu2} />
         </Tab.Navigator>
     );
@@ -52,11 +52,11 @@ function DiversScreen() {
                 headerTintColor: '#fff',
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
-                    if (route.name === 'Modale') {
-                        iconName = focused ? 'list' : 'list-outline';
-                    } else if (route.name === 'Login') {
+                    if (route.name === 'Info') {
                         iconName = 'person-outline';
-                    } else if (route.name === 'Divers3') {
+                    } else if (route.name === 'Connexion') {
+                        iconName = 'key-outline';
+                    } else if (route.name === 'Divers') {
                         iconName = focused ? 'list' : 'list-outline';
                     }
                     // You can return any component that you like here!
@@ -67,9 +67,9 @@ function DiversScreen() {
                 tabBarStyle: { backgroundColor: '#000' }
             })}
         >
-            <Tab.Screen name="Modale" component={Divers} />
-            <Tab.Screen name="Login" component={Login} />
-            <Tab.Screen name="Divers3" component={Divers3} />
+            <Tab.Screen name="Info" component={Compte} />
+            <Tab.Screen name="Connexion" component={Login} />
+            <Tab.Screen name="Divers" component={Divers3} />
         </Tab.Navigator>
     );
 }
@@ -117,8 +117,8 @@ function Navigation() {
                         let iconName;
                         if (route.name === 'Accueil') {
                             iconName = 'home';
-                        } else if (route.name === 'Divers') {
-                            iconName = focused ? 'list' : 'list-outline';
+                        } else if (route.name === 'Compte') {
+                            iconName = 'person-outline';
                         } else if (route.name === 'Contact') {
                             iconName = 'at-circle-outline';
                         }
@@ -131,7 +131,7 @@ function Navigation() {
                     drawerStyle: { backgroundColor: '#000' }
                 })}>
                 <Drawer.Screen name="Accueil" component={AccueilScreen} />
-                <Drawer.Screen name="Divers" component={DiversScreen} />
+                <Drawer.Screen name="Compte" component={DiversScreen} />
                 <Drawer.Screen name="Contact" component={ContactScreen} />
             </Drawer.Navigator>
         </NavigationContainer>

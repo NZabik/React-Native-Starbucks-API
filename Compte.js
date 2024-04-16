@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, Modal, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
 
-function Divers() {
+function Compte() {
     const [isDisplayed, setIsDisplayed] = useState(false);
     const [modal, setModal] = useState(false);
     return (
@@ -61,4 +61,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-export default Divers;
+export default Compte;

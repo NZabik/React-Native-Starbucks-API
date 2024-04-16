@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,7 +7,17 @@ import { useNavigation } from '@react-navigation/native';
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [token, setToken] = useState(null);
     const navigation = useNavigation();
+
+    useEffect(() => {
+        async function getToken() {
+            const storedToken = await AsyncStorage.getItem('userToken');
+            setToken(storedToken);
+        }
+
+        getToken();
+    }, []);
 
     async function login() {
         try {
@@ -22,8 +32,9 @@ export default function Login() {
                 console.log('Token:', token);
                 // stocker le token pour une utilisation ultérieure
                 await AsyncStorage.setItem('userToken', token);
+                setToken(token);
                 // naviguer vers la page d'accueil
-                navigation.navigate('Accueil');
+                navigation.navigate('Présentation');
             } else {
                 console.log('Login failed');
                 // handle failed login here
@@ -37,28 +48,36 @@ export default function Login() {
     async function logout() {
         // supprimer le token du stockage
         await AsyncStorage.removeItem('userToken');
+        setToken(null);
 
         // naviguer vers la page de connexion
-        navigation.navigate('Accueil');
+        navigation.navigate('Présentation');
     }
 
     return (
         <View style={styles.container}>
-            <TextInput
+            <Text style={{ color: '#fff', marginBottom: 20 }}>Connexion / déconnexion</Text>
+            {!token && (<TextInput
                 style={styles.input}
                 placeholder="Username"
                 onChangeText={setUsername}
                 value={username}
-            />
-            <TextInput
+            />)}
+            {!token && (<TextInput
                 style={styles.input}
                 placeholder="Password"
                 onChangeText={setPassword}
                 value={password}
                 secureTextEntry
-            />
-            <Button title="Login" onPress={login} />
-            <Button title="Logout" onPress={logout} />
+            />)}
+            {!token && (
+            <View style={styles.button}>
+        <Button color="#A7000C" title="Connexion" onPress={login} />
+    </View>)}
+    {token && (
+    <View style={styles.button}>
+        <Button color="#A7000C" title="Déconnexion" onPress={logout} />
+    </View>)}
         </View>
     );
 }
@@ -78,5 +97,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         paddingHorizontal: 10,
+    },
+    button: {
+        marginBottom: 10,
     },
 });
