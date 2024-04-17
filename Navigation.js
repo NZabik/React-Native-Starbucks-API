@@ -1,6 +1,12 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useIsFocused } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode } from "jwt-decode";
+import { decode as atob, encode as btoa } from 'base-64'
+if (!global.btoa) {  global.btoa = btoa }
+if (!global.atob) { global.atob = atob }
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Accueil from "./Accueil";
 import MenuModale from "./MenuModale";
@@ -10,7 +16,8 @@ import Contact2 from "./Contact2";
 import Contact3 from "./Contact3";
 import Compte from "./Compte";
 import Login from "./Login";
-import Divers3 from "./Divers3";
+import AddProduct from "./AddProduct";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -45,6 +52,27 @@ function AccueilScreen() {
 }
 
 function DiversScreen() {
+    const isFocused = useIsFocused();
+    const [roles, setUserRoles] = useState(null);
+    async function decodeToken() {
+        try {
+            const storedToken = await AsyncStorage.getItem('userToken');
+            if (storedToken) {
+                const decodedToken = jwtDecode(storedToken);
+                setUserRoles(decodedToken.roles);
+                console.log(roles);
+            } else {
+                setUserRoles(null);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        decodeToken();
+    
+    }, [isFocused]);
+
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -56,8 +84,8 @@ function DiversScreen() {
                         iconName = 'person-outline';
                     } else if (route.name === 'Connexion') {
                         iconName = 'key-outline';
-                    } else if (route.name === 'Divers') {
-                        iconName = focused ? 'list' : 'list-outline';
+                    } else if (route.name === 'Ajout produit') {
+                        iconName = 'add-circle-outline';
                     }
                     // You can return any component that you like here!
                     return <Ionicons name={iconName} size={size} color={color} />;
@@ -69,7 +97,7 @@ function DiversScreen() {
         >
             <Tab.Screen name="Info" component={Compte} />
             <Tab.Screen name="Connexion" component={Login} />
-            <Tab.Screen name="Divers" component={Divers3} />
+            {roles && roles.includes('ROLE_ADMIN') && <Tab.Screen name="Ajout produit" component={AddProduct} />}
         </Tab.Navigator>
     );
 }
@@ -103,6 +131,7 @@ function ContactScreen() {
         </Tab.Navigator>
     );
 }
+
 
 function Navigation() {
 

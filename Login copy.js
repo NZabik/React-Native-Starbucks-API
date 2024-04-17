@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 
 export default function Login() {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const [token, setToken] = useState(null);
     const navigation = useNavigation();
-    const [roles, setUserRoles] = useState(null);
+
     useEffect(() => {
         async function getToken() {
             const storedToken = await AsyncStorage.getItem('userToken');
@@ -18,11 +20,11 @@ export default function Login() {
         getToken();
     }, []);
 
-    async function login(values) {
+    async function login() {
         try {
             const response = await axios.post('http://10.0.2.2:8000/api/login_check', {
-                username: values.username,
-                password: values.password
+                username: username,
+                password: password
             });
 
             if (response.status === 200) {
@@ -39,7 +41,8 @@ export default function Login() {
                 // handle failed login here
             }
         } catch (error) {
-            Alert.alert('Erreur', 'Nom ou mot de passe incorrects');
+            console.error('An error occurred while logging in:', error);
+            // handle error here
         }
     }
 
@@ -47,48 +50,38 @@ export default function Login() {
         // supprimer le token du stockage
         await AsyncStorage.removeItem('userToken');
         setToken(null);
-        setUserRoles(null);
+
         // naviguer vers la page de connexion
         navigation.navigate('Présentation');
     }
 
     return (
-        <Formik
-            initialValues={{ username: '', password: '' }}
-            onSubmit={login}
-        >
-            {({ handleChange, handleBlur, handleSubmit, values }) => (
-                <View style={styles.container}>
-                    {!token && (<TextInput
-                        style={styles.input}
-                        placeholder="Username"
-                        placeholderTextColor="#8B8888"
-                        onChangeText={handleChange('username')}
-                        onBlur={handleBlur('username')}
-                        value={values.username}
-                    />)}
-                    {!token && (<TextInput
-                        style={styles.input}
-                        placeholder="Password"
-                        placeholderTextColor="#8B8888"
-                        onChangeText={handleChange('password')}
-                        onBlur={handleBlur('password')}
-                        value={values.password}
-                        secureTextEntry
-                    />)}
-                    {!token && (
-                        <View style={styles.button}>
-                            <Button color="#A7000C" title="Connexion" onPress={handleSubmit} />
-                        </View>
-                    )}
-                    {token && (
-                        <View style={styles.button}>
-                            <Button color="#A7000C" title="Déconnexion" onPress={logout} />
-                        </View>
-                    )}
-                </View>
-            )}
-        </Formik>
+        <View style={styles.container}>
+            <Text style={{ color: '#fff', marginBottom: 20 }}>Connexion / déconnexion</Text>
+            {!token && (<TextInput
+                style={styles.input}
+                placeholder="Username"
+                placeholderTextColor="#8B8888"
+                onChangeText={setUsername}
+                value={username}
+            />)}
+            {!token && (<TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor="#8B8888"
+                onChangeText={setPassword}
+                value={password}
+                secureTextEntry
+            />)}
+            {!token && (
+            <View style={styles.button}>
+        <Button color="#A7000C" title="Connexion" onPress={login} />
+    </View>)}
+    {token && (
+    <View style={styles.button}>
+        <Button color="#A7000C" title="Déconnexion" onPress={logout} />
+    </View>)}
+        </View>
     );
 }
 
@@ -102,8 +95,7 @@ const styles = StyleSheet.create({
     input: {
         height: 40,
         width: 200,
-        borderColor: '#FFF',
-        borderRadius: 10,
+        borderColor: 'gray',
         color: '#fff',
         borderWidth: 1,
         marginBottom: 10,

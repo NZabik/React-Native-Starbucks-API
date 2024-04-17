@@ -45,7 +45,7 @@ function MenuModale() {
                     </TouchableOpacity>
                 ) : (
                     <Text style={{ color: '#fff', textAlign: 'center' }}>
-                        Veuillez vous connecter
+                        Veuillez vous connecter pour voir nos produits
                     </Text>
                 )}
             </View>
