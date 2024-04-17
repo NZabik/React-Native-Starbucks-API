@@ -17,6 +17,8 @@ import Contact3 from "./Contact3";
 import Compte from "./Compte";
 import Login from "./Login";
 import AddProduct from "./AddProduct";
+import DeleteProduct from "./DeleteProduct";
+import ModifyProduct from './ModifyProduct';
 
 
 const Tab = createBottomTabNavigator();
@@ -86,6 +88,10 @@ function DiversScreen() {
                         iconName = 'key-outline';
                     } else if (route.name === 'Ajout produit') {
                         iconName = 'add-circle-outline';
+                    } else if (route.name === 'Suppression produit') {
+                        iconName = 'remove-circle-outline';
+                    } else if (route.name === 'Modifier produit') {
+                        iconName = 'arrow-up-circle-outline';
                     }
                     // You can return any component that you like here!
                     return <Ionicons name={iconName} size={size} color={color} />;
@@ -98,6 +104,8 @@ function DiversScreen() {
             <Tab.Screen name="Info" component={Compte} />
             <Tab.Screen name="Connexion" component={Login} />
             {roles && roles.includes('ROLE_ADMIN') && <Tab.Screen name="Ajout produit" component={AddProduct} />}
+            {roles && roles.includes('ROLE_ADMIN') && <Tab.Screen name="Modifier produit" component={ModifyProduct} />}
+            {roles && roles.includes('ROLE_ADMIN') && <Tab.Screen name="Suppression produit" component={DeleteProduct} />}
         </Tab.Navigator>
     );
 }

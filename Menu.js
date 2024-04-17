@@ -1,12 +1,11 @@
 import { StyleSheet, Text, View, Button, SafeAreaView, Platform, StatusBar } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Products from './Products';
 
 function Menu2() {
     const [refreshKey, setRefreshKey] = useState(0);
-    const navigation = useNavigation();
     const isFocused = useIsFocused();
     const [token, setToken] = useState(null);
 

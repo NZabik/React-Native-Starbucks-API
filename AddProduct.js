@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, TextInput, View, StyleSheet } from 'react-native';
+import { Button, TextInput, View, StyleSheet, Alert } from 'react-native';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -24,6 +24,7 @@ async function addProduct(values) {
             });
 
             console.log(response.data);
+            Alert.alert(`${values.name} a été ajouté avec succès`);
         }
     } catch (error) {
         console.error(error);
