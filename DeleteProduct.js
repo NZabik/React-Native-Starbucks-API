@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function DeleteProduct() {
     const [products, setProducts] = useState([]);
     const [active, setActive] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -23,8 +24,8 @@ function DeleteProduct() {
                 }
             });
             setProducts(response.data);
-            
         }
+        setRefreshing(false);
     }
 
     async function deleteProduct(id) {
@@ -44,6 +45,7 @@ function DeleteProduct() {
     return (
         <FlatList
             data={products}
+            extraData={refreshing}
             keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => (
                 <View style={styles.container}>
@@ -58,6 +60,8 @@ function DeleteProduct() {
                     </View>
                 </View>
             )}
+            onRefresh={fetchProducts}
+            refreshing={refreshing}
         />
     );
 }

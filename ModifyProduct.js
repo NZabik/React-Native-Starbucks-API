@@ -34,6 +34,7 @@ function ProductItem({ item, modifyProduct }) {
 
 function ModifyProduct() {
     const [products, setProducts] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         fetchProducts();
@@ -49,6 +50,7 @@ function ModifyProduct() {
             });
 
             setProducts(response.data);
+            setRefreshing(false);
         }
     }
 
@@ -61,19 +63,23 @@ function ModifyProduct() {
                 }
             });
             Alert.alert('Produit modifié avec succès');
+            setRefreshing(true);
             fetchProducts();
         }
     }
 
     return (
         <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "android" ? "padding" : "height"}
         style={styles.liste}
         >
         <FlatList
             data={products}
+            extraData={refreshing}
             keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => <ProductItem item={item} modifyProduct={modifyProduct} />}
+            onRefresh={fetchProducts}
+            refreshing={refreshing}
         />
         </KeyboardAvoidingView>
     );
